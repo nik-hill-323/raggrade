@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: ruff check ragcheck tests
+      - run: pytest --cov=ragcheck --cov-report=term-missing
+      - name: Score the example set and gate on it
+        run: |
+          ragcheck run examples/cases.jsonl --out results.json
+          ragcheck gate results.json --citations 0.5 || true
