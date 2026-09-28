@@ -86,7 +86,7 @@ def _parse_json(text: str) -> dict:
 
 
 class AnthropicJudge:
-    """Uses the Anthropic API. Requires ``pip install ragcheck[anthropic]`` and
+    """Uses the Anthropic API. Requires ``pip install raggrade[anthropic]`` and
     ``ANTHROPIC_API_KEY``."""
 
     name = "anthropic"
@@ -112,7 +112,7 @@ class AnthropicJudge:
 
 
 class OpenAIJudge:
-    """Uses the OpenAI API. Requires ``pip install ragcheck[openai]`` and ``OPENAI_API_KEY``."""
+    """Uses the OpenAI API. Requires ``pip install raggrade[openai]`` and ``OPENAI_API_KEY``."""
 
     name = "openai"
 

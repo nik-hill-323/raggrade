@@ -1,5 +1,5 @@
-"""    ragcheck run cases.jsonl [--judge lexical|anthropic|openai] [--out results.json]
-    ragcheck gate results.json --faithfulness 0.9 --recall 0.8
+"""    raggrade run cases.jsonl [--judge lexical|anthropic|openai] [--out results.json]
+    raggrade gate results.json --faithfulness 0.9 --recall 0.8
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from .runner import evaluate, load_cases
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="ragcheck", description="Evaluate a RAG system")
+    p = argparse.ArgumentParser(prog="raggrade", description="Evaluate a RAG system")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     run = sub.add_parser("run", help="score a file of cases")

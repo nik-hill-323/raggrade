@@ -1,9 +1,9 @@
-"""ragcheck: evaluation for retrieval-augmented generation systems.
+"""raggrade: evaluation for retrieval-augmented generation systems.
 
 A RAG answer can fail in three places. Retrieval can miss the passage that
 holds the answer. Generation can say things the retrieved passages do not
 support. And the answer can be faithful to its sources but not actually answer
-the question. ragcheck scores each failure mode separately so you can see
+the question. raggrade scores each failure mode separately so you can see
 which part of the pipeline to fix.
 
 Retrieval metrics need only the ids of retrieved and relevant passages.
@@ -18,7 +18,7 @@ from .metrics import (
     citation_coverage,
     retrieval_scores,
 )
-from .runner import evaluate
+from .runner import evaluate, evaluate_case
 from .schema import EvalCase, EvalResult, EvalSummary
 
 __all__ = [
@@ -30,6 +30,7 @@ __all__ = [
     "RetrievalScores",
     "citation_coverage",
     "evaluate",
+    "evaluate_case",
     "retrieval_scores",
 ]
 

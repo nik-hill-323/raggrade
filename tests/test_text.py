@@ -1,4 +1,4 @@
-from ragcheck.text import citations, overlap, sentences, strip_citations, tokens
+from raggrade.text import citations, overlap, sentences, strip_citations, tokens
 
 
 def test_sentences_keep_citations_attached():

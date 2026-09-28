@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from ragcheck import evaluate
-from ragcheck.cli import main
-from ragcheck.runner import load_cases
+from raggrade import evaluate
+from raggrade.cli import main
+from raggrade.runner import load_cases
 
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples" / "cases.jsonl"
 

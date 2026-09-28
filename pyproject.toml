@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ragcheck"
+name = "raggrade"
 version = "0.1.0"
 description = "Evaluate retrieval-augmented generation: retrieval quality, faithfulness, answer relevance and citation coverage, with an offline judge for CI and an LLM judge for depth."
 readme = "README.md"
@@ -18,10 +18,10 @@ openai = ["openai>=1.30"]
 dev = ["pytest>=7", "pytest-cov", "ruff"]
 
 [project.scripts]
-ragcheck = "ragcheck.cli:main"
+raggrade = "raggrade.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["ragcheck*"]
+include = ["raggrade*"]
 
 [tool.ruff]
 line-length = 100

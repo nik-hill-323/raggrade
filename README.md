@@ -1,4 +1,4 @@
-# ragcheck
+# raggrade
 
 Evaluation for retrieval-augmented generation. It scores the three places a
 RAG answer can go wrong, separately, so you know which part of the pipeline
@@ -19,7 +19,7 @@ and are for real evaluation runs.
 
 ```bash
 pip install -e ".[dev]"
-ragcheck run examples/cases.jsonl
+raggrade run examples/cases.jsonl
 ```
 
 ```
@@ -38,8 +38,8 @@ sentence, and one answer that ignores the question. The per-case output names
 the invented sentence:
 
 ```python
-from ragcheck import evaluate
-from ragcheck.runner import load_cases
+from raggrade import evaluate
+from raggrade.runner import load_cases
 
 summary = evaluate(load_cases("examples/cases.jsonl"))
 summary.results[1].unsupported_claims
@@ -48,12 +48,12 @@ summary.results[1].unsupported_claims
 
 ## Gate a deployment on it
 
-`ragcheck gate` exits non-zero when a results file misses a threshold, so a
+`raggrade gate` exits non-zero when a results file misses a threshold, so a
 regression in faithfulness fails the build:
 
 ```bash
-ragcheck run eval/cases.jsonl --judge anthropic --out results.json
-ragcheck gate results.json --faithfulness 0.9 --recall 0.8 --citations 0.95
+raggrade run eval/cases.jsonl --judge anthropic --out results.json
+raggrade gate results.json --faithfulness 0.9 --recall 0.8 --citations 0.95
 ```
 
 ```

@@ -1,7 +1,7 @@
 import pytest
 
-from ragcheck import LexicalJudge, citation_coverage, retrieval_scores
-from ragcheck.metrics import faithfulness, reference_similarity
+from raggrade import LexicalJudge, citation_coverage, retrieval_scores
+from raggrade.metrics import faithfulness, reference_similarity
 
 PASSAGES = [
     "Metformin is contraindicated in severe renal impairment (eGFR below 30) and in metabolic acidosis.",
