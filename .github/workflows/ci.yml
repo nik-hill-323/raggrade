@@ -17,9 +17,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
-      - run: ruff check ragcheck tests
-      - run: pytest --cov=ragcheck --cov-report=term-missing
+      - run: ruff check raggrade tests
+      - run: pytest --cov=raggrade --cov-report=term-missing
       - name: Score the example set and gate on it
         run: |
-          ragcheck run examples/cases.jsonl --out results.json
-          ragcheck gate results.json --citations 0.5 || true
+          raggrade run examples/cases.jsonl --out results.json
+          raggrade gate results.json --citations 0.5
