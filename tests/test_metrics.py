@@ -1,7 +1,9 @@
+import math
+
 import pytest
 
 from raggrade import LexicalJudge, citation_coverage, retrieval_scores
-from raggrade.metrics import faithfulness, reference_similarity
+from raggrade.metrics import faithfulness, ndcg_at_k, reference_similarity
 
 PASSAGES = [
     "Metformin is contraindicated in severe renal impairment (eGFR below 30) and in metabolic acidosis.",
@@ -18,7 +20,32 @@ def test_retrieval_scores_basic():
 
 def test_retrieval_scores_empty():
     r = retrieval_scores([], ["a"])
-    assert (r.precision_at_k, r.recall_at_k, r.mrr) == (0.0, 0.0, 0.0)
+    assert (r.precision_at_k, r.recall_at_k, r.mrr, r.ndcg_at_k) == (0.0, 0.0, 0.0, 0.0)
+
+
+def test_ndcg_hand_computed():
+    # hits at ranks 2 and 4, three relevant ids, k = 4:
+    # DCG = 1/log2(3) + 1/log2(5); ideal = 1/log2(2) + 1/log2(3) + 1/log2(4)
+    dcg = 1 / math.log2(3) + 1 / math.log2(5)
+    ideal = 1 + 1 / math.log2(3) + 0.5
+    assert ndcg_at_k(["a", "b", "c", "d"], ["b", "d", "z"]) == pytest.approx(dcg / ideal)
+    assert retrieval_scores(["a", "b", "c", "d"], ["b", "d", "z"]).ndcg_at_k == pytest.approx(dcg / ideal)
+
+
+def test_ndcg_rewards_ranking_where_precision_does_not():
+    top = ndcg_at_k(["r", "x", "y"], ["r"])
+    bottom = ndcg_at_k(["x", "y", "r"], ["r"])
+    assert top == 1.0
+    assert bottom == pytest.approx(0.5)
+    assert retrieval_scores(["r", "x", "y"], ["r"]).precision_at_k == retrieval_scores(["x", "y", "r"], ["r"]).precision_at_k
+
+
+def test_ndcg_cutoff_and_edge_cases():
+    assert ndcg_at_k(["x", "r"], ["r"], k=1) == 0.0
+    assert ndcg_at_k(["r", "s"], ["r", "s", "t"], k=2) == 1.0
+    assert ndcg_at_k(["r", "r"], ["r", "s"]) == pytest.approx(1 / (1 + 1 / math.log2(3)))
+    assert ndcg_at_k(["a"], []) == 0.0
+    assert ndcg_at_k([], ["a"]) == 0.0
 
 
 def test_faithful_answer_scores_one():

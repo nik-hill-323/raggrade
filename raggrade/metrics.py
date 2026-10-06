@@ -8,6 +8,7 @@ the judge swappable.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 
 from .judges import Judge
@@ -19,13 +20,14 @@ class RetrievalScores:
     precision_at_k: float
     recall_at_k: float
     mrr: float
+    ndcg_at_k: float
 
 
 def retrieval_scores(retrieved_ids: list[str], relevant_ids: list[str]) -> RetrievalScores:
-    """Precision@k and recall@k over the retrieved list (k = its length), and
-    reciprocal rank of the first relevant hit."""
+    """Precision@k, recall@k and nDCG@k over the retrieved list (k = its
+    length), and reciprocal rank of the first relevant hit."""
     if not retrieved_ids:
-        return RetrievalScores(0.0, 0.0, 0.0)
+        return RetrievalScores(0.0, 0.0, 0.0, 0.0)
     relevant = set(relevant_ids)
     hits = [rid in relevant for rid in retrieved_ids]
     precision = sum(hits) / len(retrieved_ids)
@@ -35,7 +37,31 @@ def retrieval_scores(retrieved_ids: list[str], relevant_ids: list[str]) -> Retri
         if hit:
             mrr = 1.0 / rank
             break
-    return RetrievalScores(precision, recall, mrr)
+    return RetrievalScores(precision, recall, mrr, ndcg_at_k(retrieved_ids, relevant_ids))
+
+
+def ndcg_at_k(retrieved_ids: list[str], relevant_ids: list[str], k: int | None = None) -> float:
+    """Normalised discounted cumulative gain with binary relevance.
+
+    Unlike precision and recall it rewards putting the relevant passages near
+    the top: a hit at rank i contributes 1 / log2(i + 1), and the total is
+    divided by the gain of the ideal ranking, where every relevant passage
+    (up to k of them) comes first. ``k`` defaults to the retrieved length.
+    Duplicate ids only count the first time, so a retriever cannot score by
+    repeating a relevant passage.
+    """
+    relevant = set(relevant_ids)
+    k = len(retrieved_ids) if k is None else k
+    if k <= 0 or not relevant:
+        return 0.0
+    seen: set[str] = set()
+    dcg = 0.0
+    for rank, rid in enumerate(retrieved_ids[:k], start=1):
+        if rid in relevant and rid not in seen:
+            dcg += 1.0 / math.log2(rank + 1)
+        seen.add(rid)
+    ideal = sum(1.0 / math.log2(rank + 1) for rank in range(1, min(k, len(relevant)) + 1))
+    return dcg / ideal
 
 
 def faithfulness(answer: str, passages: list[str], judge: Judge) -> tuple[float, list[str]]:

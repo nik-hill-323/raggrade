@@ -6,7 +6,7 @@ to fix:
 
 | Failure | Metric | Needs |
 |---|---|---|
-| Retrieval missed the evidence | `precision_at_k`, `recall_at_k`, `mrr` | ids of relevant passages |
+| Retrieval missed the evidence | `precision_at_k`, `recall_at_k`, `mrr`, `ndcg_at_k` | ids of relevant passages |
 | Generation said something the evidence does not support | `faithfulness` (+ the unsupported sentences) | nothing |
 | Answer is grounded but does not answer the question | `answer_relevance` | nothing |
 | Answer promises citations and does not deliver | `citation_coverage` | nothing |
@@ -27,6 +27,7 @@ metric                  mean
 precision_at_k          0.833
 recall_at_k             0.833
 mrr                     1.000
+ndcg_at_k               1.000
 faithfulness            0.556
 answer_relevance        0.556
 citation_coverage       0.556

@@ -30,7 +30,8 @@ def evaluate_case(case: EvalCase, judge: Judge) -> EvalResult:
     )
     if case.relevant_ids:
         r = retrieval_scores([p.id for p in case.retrieved], case.relevant_ids)
-        result.precision_at_k, result.recall_at_k, result.mrr = r.precision_at_k, r.recall_at_k, r.mrr
+        result.precision_at_k, result.recall_at_k = r.precision_at_k, r.recall_at_k
+        result.mrr, result.ndcg_at_k = r.mrr, r.ndcg_at_k
     if case.reference_answer:
         result.reference_similarity = reference_similarity(case.answer, case.reference_answer)
     return result
@@ -44,6 +45,7 @@ def evaluate(cases: list[EvalCase], judge: Judge | None = None) -> EvalSummary:
         "precision_at_k",
         "recall_at_k",
         "mrr",
+        "ndcg_at_k",
         "faithfulness",
         "answer_relevance",
         "citation_coverage",

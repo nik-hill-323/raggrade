@@ -32,6 +32,7 @@ class EvalResult(BaseModel):
     precision_at_k: float | None = None
     recall_at_k: float | None = None
     mrr: float | None = None
+    ndcg_at_k: float | None = None
     # generation
     faithfulness: float
     answer_relevance: float
